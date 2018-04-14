@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist 
+    xmlns="http://xspf.org/ns/0" version="1">
+    <title 
+        xmlns="">播放列表
+    </title>
+    <location 
+        xmlns="">http://comic.sjtu.edu.cn/
+    </location>
+    <trackList 
+        xmlns="">
+      <track>
+        <location>file:///music/song_1.ogg</location>
+      </track>
+      <track>
+        <location>file:///music/song_2.flac</location>
+      </track>
+      <track>
+        <location>file:///music/song_3.mp3</location>
+      </track>
+    </trackList>
+</playlist>
