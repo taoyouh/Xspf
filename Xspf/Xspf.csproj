@@ -10,6 +10,12 @@
     <Description>A library for parsing XSPF files.</Description>
     <Copyright>Copyright (c) Zhaoquan Huang. All rights reserved</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/ZhaobangChina/Xspf/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ZhaobangChina/Xspf</PackageProjectUrl>
+    <Version>1.0.0-beta</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
