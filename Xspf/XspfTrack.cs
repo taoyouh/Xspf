@@ -6,6 +6,9 @@ using System.Xml.Linq;
 
 namespace Zhaobang.Xspf
 {
+    /// <summary>
+    /// Represents a track in a XSPF playlist
+    /// </summary>
     public class XspfTrack
     {
         private readonly bool isStrict;
@@ -39,12 +42,21 @@ namespace Zhaobang.Xspf
             xEle.SetElementValue(XName.Get(name, string.Empty), null);
         }
 
+        /// <summary>
+        /// Creates an empty instance of <see cref="XspfTrack"/>
+        /// </summary>
+        /// <param name="isStrict">Whether parsing is strict</param>
         public XspfTrack(bool isStrict)
         {
             this.isStrict = isStrict;
             xEle = new XElement("track");
         }
 
+        /// <summary>
+        /// Creates an instance of <see cref="XspfTrack"/> with its XML element
+        /// </summary>
+        /// <param name="xEle">The XML element of the track in the playlist</param>
+        /// <param name="isStrict">Whether parsing is strict</param>
         public XspfTrack(XElement xEle, bool isStrict)
         {
             this.isStrict = isStrict;
@@ -52,7 +64,7 @@ namespace Zhaobang.Xspf
         }
 
         /// <summary>
-        /// Gets or sets the first URI to be rendered. <see cref="null"/> means it is not present.
+        /// Gets or sets the first URI to be rendered. Null means it is not present.
         /// </summary>
         /// <exception cref="InvalidDataException">
         /// The value of the first location element is not legal URI.
@@ -78,7 +90,7 @@ namespace Zhaobang.Xspf
         }
 
         /// <summary>
-        /// Gets or sets the first canonical ID for this resource. <see cref="null"/> means it is not present.
+        /// Gets or sets the first canonical ID for this resource. Null means it is not present.
         /// </summary>
         /// <exception cref="InvalidDataException">
         /// The value of the first identifier element is not legal URI.
@@ -104,7 +116,7 @@ namespace Zhaobang.Xspf
         }
 
         /// <summary>
-        /// Gets or sets the title of the track. <see cref="null"/> means it is not present.
+        /// Gets or sets the title of the track. Null means it is not present.
         /// </summary>
         public string Title
         {
@@ -113,7 +125,7 @@ namespace Zhaobang.Xspf
         }
 
         /// <summary>
-        /// Gets or sets the URI of image. <see cref="null"/> means it is not present.
+        /// Gets or sets the URI of image. Null means it is not present.
         /// </summary>
         /// <exception cref="InvalidDataException">
         /// The value the element is not legal URI.

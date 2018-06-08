@@ -18,6 +18,10 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.4\Zhaobang.Xspf.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Update="ErrorMessages.Designer.cs">
       <DesignTime>True</DesignTime>

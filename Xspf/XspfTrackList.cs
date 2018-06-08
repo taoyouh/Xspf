@@ -8,6 +8,9 @@ using System.Xml.Linq;
 
 namespace Zhaobang.Xspf
 {
+    /// <summary>
+    /// Represents a list of tracks in a XSPF playlist
+    /// </summary>
     public class XspfTrackList : IList<XspfTrack>
     {
         private readonly bool isStrict;
@@ -31,6 +34,10 @@ namespace Zhaobang.Xspf
             }
         }
 
+        /// <summary>
+        /// Creates an empty instance of <see cref="XspfTrackList"/>
+        /// </summary>
+        /// <param name="isStrict">Whether XML parsing is strict</param>
         public XspfTrackList(bool isStrict)
         {
             this.isStrict = isStrict;
@@ -40,7 +47,8 @@ namespace Zhaobang.Xspf
         /// <summary>
         /// Creates a new instance of <see cref="XspfTrackList"/> with its XML element.
         /// </summary>
-        /// <param name="xEle">The XML element of the track list.</param>
+        /// <param name="xEle">The XML element of the track list</param>
+        /// <param name="isStrict">Whether XML parsing is strict</param>
         /// <exception cref="ArgumentNullException">
         /// The XML element is null.
         /// </exception>
@@ -71,7 +79,7 @@ namespace Zhaobang.Xspf
         }
 
         /// <summary>
-        /// Gets whether the list is readonly. (Always returns <see cref="false"/>.)
+        /// Gets whether the list is readonly. (Always returns false.)
         /// </summary>
         public bool IsReadOnly
         {
@@ -217,7 +225,7 @@ namespace Zhaobang.Xspf
         /// Check whether the list contains the item.
         /// </summary>
         /// <param name="item">The item to check</param>
-        /// <returns><see cref="true"/> if the item is in the list, otherwise <see cref="false"/></returns>
+        /// <returns>true if the item is in the list, otherwise false</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item"/> is null.
         /// </exception>
@@ -234,7 +242,7 @@ namespace Zhaobang.Xspf
         /// <param name="array">The target array</param>
         /// <param name="arrayIndex">The start index of the target array to copy to</param>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="array"/> is <see cref="null"/>.
+        /// <paramref name="array"/> is null.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="arrayIndex"/> is less than 0.
@@ -267,7 +275,7 @@ namespace Zhaobang.Xspf
         /// Removes the first occurrence of a specific item from the list.
         /// </summary>
         /// <param name="item">The item to remove</param>
-        /// <returns><see cref="true"/>if the item is removed, otherwise <see cref="false"/></returns>
+        /// <returns>True if the item is removed, otherwise false</returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="item"/> is null.
         /// </exception>

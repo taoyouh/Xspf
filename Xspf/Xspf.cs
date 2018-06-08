@@ -8,6 +8,9 @@ using System.Xml.Linq;
 
 namespace Zhaobang.Xspf
 {
+    /// <summary>
+    /// Represents a XSPF playlist
+    /// </summary>
     public class Xspf
     {
         internal const string NS = "http://xspf.org/ns/0/";
@@ -44,10 +47,10 @@ namespace Zhaobang.Xspf
         /// </summary>
         /// <param name="name">The local name of the elmeent</param>
         /// <remarks>
-        /// If <see cref="isStrict"/> is set to <see cref="true"/>, the exact full name is required.
+        /// If <see cref="isStrict"/> is set to true, the exact full name is required.
         /// Otherwise, alternate namespace or empty namespace is accepted if exact full name is not found.
         /// </remarks>
-        /// <returns>The found element or <see cref="null"/> if not found</returns>
+        /// <returns>The found element or null if not found</returns>
         /// <exception cref="InvalidDataException">
         /// <see cref="Playlist"/> is not found in XML.
         /// </exception>
@@ -75,7 +78,7 @@ namespace Zhaobang.Xspf
         /// Sets element with specified name in <see cref="Playlist"/>
         /// </summary>
         /// <param name="name">The local name of the elmeent</param>
-        /// <param name="value">The value of the element, <see cref="null"/> to remove element</param>
+        /// <param name="value">The value of the element. Set to null to remove element.</param>
         /// <remarks>
         /// The standard namespace <see cref="NS"/> will be used and elements with alternate namespace <see cref="NS1"/>
         /// or empty namespace will be removed.
@@ -90,6 +93,10 @@ namespace Zhaobang.Xspf
             Playlist.SetElementValue(XName.Get(name, string.Empty), null);
         }
 
+        /// <summary>
+        /// Creates an empty XSPF playlist
+        /// </summary>
+        /// <param name="isStrict">Whether parsing is strict</param>
         public Xspf(bool isStrict)
         {
             this.isStrict = isStrict;
@@ -100,34 +107,76 @@ namespace Zhaobang.Xspf
             xDoc.Add(playList);
         }
 
+        /// <summary>
+        /// Loads a XSPF playlist from an instance of <see cref="XDocument"/>
+        /// </summary>
+        /// <remarks>
+        /// The created instance reference to <paramref name="xDoc"/> rather than copying it.
+        /// </remarks>
+        /// <param name="xDoc">The XML document of XSPF file</param>
+        /// <param name="isStrict">Whether parsing is strict</param>
         public Xspf(XDocument xDoc, bool isStrict)
         {
             this.isStrict = isStrict;
             this.xDoc = xDoc;
         }
 
+        /// <summary>
+        /// Loads a XSPF playlist from a <see cref="Stream"/>
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to load from</param>
+        /// <param name="isStrict">Whether XML parsing is strict</param>
+        /// <returns>The <see cref="Xspf"/> instance loaded from the stream</returns>
         public static Xspf Load(Stream stream, bool isStrict)
         {
             return new Xspf(XDocument.Load(stream), isStrict);
         }
 
+        /// <summary>
+        /// Loads a XSPF playlist from a URI
+        /// </summary>
+        /// <param name="uri">The URI to load from</param>
+        /// <param name="isStrict">Whether XML parsing is strict</param>
+        /// <returns>The <see cref="Xspf"/> instance loaded from the stream</returns>
         public static Xspf Load(string uri, bool isStrict)
         {
             return new Xspf(XDocument.Load(uri), isStrict);
         }
 
+        /// <summary>
+        /// Save the playlist to a <see cref="Stream"/>
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to save to</param>
         public void Save(Stream stream)
         { xDoc.Save(stream); }
 
+        /// <summary>
+        /// Save the playlist to a <see cref="System.Xml.XmlWriter"/>
+        /// </summary>
+        /// <param name="xmlWriter">The <see cref="System.Xml.XmlWriter"/> to save to</param>
         public void Save(System.Xml.XmlWriter xmlWriter)
         { xDoc.Save(xmlWriter); }
 
+        /// <summary>
+        /// Save the playlist to a <see cref="TextWriter"/>
+        /// </summary>
+        /// <param name="textWriter">The <see cref="TextWriter"/> to save to</param>
         public void Save(TextWriter textWriter)
         { xDoc.Save(textWriter); }
 
+        /// <summary>
+        /// Save the playlist to a <see cref="Stream"/>
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to save to</param>
+        /// <param name="options">The <see cref="SaveOptions"/> instance containing options of XML writing</param>
         public void Save(Stream stream, SaveOptions options)
         { xDoc.Save(stream, options); }
 
+        /// <summary>
+        /// Save the playlist to a <see cref="TextWriter"/>
+        /// </summary>
+        /// <param name="textWriter">The <see cref="TextWriter"/> to save to</param>
+        /// <param name="options">The <see cref="SaveOptions"/> instance containing options of XML writing</param>
         public void Save(TextWriter textWriter, SaveOptions options)
         { xDoc.Save(textWriter, options); }
 
