@@ -13,7 +13,7 @@ namespace Zhaobang.Xspf.Tests
         [Fact]
         public void NewXspfTest()
         {
-            var xspf = new Xspf(true);
+            var xspf = new Xspf();
 
             XspfCommonTest(xspf);
         }
@@ -21,16 +21,7 @@ namespace Zhaobang.Xspf.Tests
         [Fact]
         public void LoadXspfTest()
         {
-            var xspf = Xspf.Load("Data/Utf8WithBom.xspf", true);
-            Assert.Equal(new Uri("file:///music/song_1.ogg"), xspf.TrackList[0].Location);
-
-            XspfCommonTest(xspf);
-        }
-
-        [Fact]
-        public void LoadXspfNotStrictTest()
-        {
-            var xspf = Xspf.Load("Data/NotStrict.xspf", false);
+            var xspf = Xspf.Load("Data/Utf8WithBom.xspf");
             Assert.Equal(new Uri("file:///music/song_1.ogg"), xspf.TrackList[0].Location);
 
             XspfCommonTest(xspf);
@@ -51,6 +42,8 @@ namespace Zhaobang.Xspf.Tests
             Assert.Null(xspf.Creator);
 
             Assert.NotNull(xspf.TrackList);
+
+            Assert.Equal(xspf.TrackList, xspf.TrackList);
         }
     }
 }

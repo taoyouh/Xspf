@@ -12,7 +12,7 @@ namespace Zhaobang.Xspf.Tests
         [Fact]
         public void NewXspfTrackTest()
         {
-            XspfTrack track = new XspfTrack(true);
+            XspfTrack track = new XspfTrack();
             
             track.Location = TestUri;
             Assert.Equal(TestUri, track.Location);

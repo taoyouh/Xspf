@@ -11,14 +11,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\NotStrict.xspf" />
     <None Remove="Data\Utf8WithBom.xspf" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\NotStrict.xspf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Data\Utf8WithBom.xspf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

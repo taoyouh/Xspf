@@ -14,9 +14,6 @@ namespace Zhaobang.Xspf
     public class Xspf
     {
         internal const string NS = "http://xspf.org/ns/0/";
-        internal const string NS1 = "http://xspf.org/ns/0";
-
-        private readonly bool isStrict;
 
         private readonly XDocument xDoc;
 
@@ -34,10 +31,6 @@ namespace Zhaobang.Xspf
                 if (result != null)
                     return result;
 
-                result = xDoc.Element(XName.Get("playlist", NS1));
-                if (result != null)
-                    return result;
-
                 throw new InvalidDataException(string.Format(ErrorMessages.ElementMissing, "playlist", "XML root"));
             }
         }
@@ -46,32 +39,13 @@ namespace Zhaobang.Xspf
         /// Gets element with specified name in <see cref="Playlist"/>.
         /// </summary>
         /// <param name="name">The local name of the elmeent</param>
-        /// <remarks>
-        /// If <see cref="isStrict"/> is set to true, the exact full name is required.
-        /// Otherwise, alternate namespace or empty namespace is accepted if exact full name is not found.
-        /// </remarks>
         /// <returns>The found element or null if not found</returns>
         /// <exception cref="InvalidDataException">
         /// <see cref="Playlist"/> is not found in XML.
         /// </exception>
         private XElement GetElementInPlaylist(string name)
         {
-            XElement result = Playlist.Element(XName.Get(name, NS));
-            if (result != null)
-                return result;
-
-            if (!isStrict)
-            {
-                result = Playlist.Element(XName.Get(name, NS1));
-                if (result != null)
-                    return result;
-
-                result = Playlist.Element(XName.Get(name, string.Empty));
-                if (result != null)
-                    return result;
-            }
-
-            return null;
+            return Playlist.Element(XName.Get(name, NS));
         }
 
         /// <summary>
@@ -79,27 +53,19 @@ namespace Zhaobang.Xspf
         /// </summary>
         /// <param name="name">The local name of the elmeent</param>
         /// <param name="value">The value of the element. Set to null to remove element.</param>
-        /// <remarks>
-        /// The standard namespace <see cref="NS"/> will be used and elements with alternate namespace <see cref="NS1"/>
-        /// or empty namespace will be removed.
-        /// </remarks>
         /// <exception cref="InvalidDataException">
         /// <see cref="Playlist"/> is not found in XML.
         /// </exception>
         private void SetElementValueInPlaylist(string name, object value)
         {
             Playlist.SetElementValue(XName.Get(name, NS), value);
-            Playlist.SetElementValue(XName.Get(name, NS1), null);
-            Playlist.SetElementValue(XName.Get(name, string.Empty), null);
         }
 
         /// <summary>
         /// Creates an empty XSPF playlist
         /// </summary>
-        /// <param name="isStrict">Whether parsing is strict</param>
-        public Xspf(bool isStrict)
+        public Xspf()
         {
-            this.isStrict = isStrict;
             xDoc = new XDocument();
             var playList = new XElement(XName.Get("playlist", NS));
             playList.Add(new XElement(XName.Get("trackList", NS)));
@@ -110,37 +76,43 @@ namespace Zhaobang.Xspf
         /// <summary>
         /// Loads a XSPF playlist from an instance of <see cref="XDocument"/>
         /// </summary>
-        /// <remarks>
-        /// The created instance reference to <paramref name="xDoc"/> rather than copying it.
-        /// </remarks>
         /// <param name="xDoc">The XML document of XSPF file</param>
-        /// <param name="isStrict">Whether parsing is strict</param>
-        public Xspf(XDocument xDoc, bool isStrict)
+        /// <exception cref="ArgumentNullException"><paramref name="xDoc"/> is null</exception>
+        public Xspf(XDocument xDoc) : this(xDoc, true)
+        { }
+
+        /// <summary>
+        /// Loads a XSPF playlist from an instance of <see cref="XDocument"/>
+        /// </summary>
+        /// <param name="xDoc">The XML document of XSPF file</param>
+        /// <param name="copy">Whether to copy <paramref name="xDoc"/></param>
+        /// <exception cref="ArgumentNullException"><paramref name="xDoc"/> is null</exception>
+        private Xspf(XDocument xDoc, bool copy)
         {
-            this.isStrict = isStrict;
-            this.xDoc = xDoc;
+            if (copy)
+                this.xDoc = new XDocument(xDoc ?? throw new ArgumentNullException(nameof(xDoc)));
+            else
+                this.xDoc = xDoc ?? throw new ArgumentNullException(nameof(xDoc));
         }
 
         /// <summary>
         /// Loads a XSPF playlist from a <see cref="Stream"/>
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> to load from</param>
-        /// <param name="isStrict">Whether XML parsing is strict</param>
         /// <returns>The <see cref="Xspf"/> instance loaded from the stream</returns>
-        public static Xspf Load(Stream stream, bool isStrict)
+        public static Xspf Load(Stream stream)
         {
-            return new Xspf(XDocument.Load(stream), isStrict);
+            return new Xspf(XDocument.Load(stream), false);
         }
 
         /// <summary>
         /// Loads a XSPF playlist from a URI
         /// </summary>
         /// <param name="uri">The URI to load from</param>
-        /// <param name="isStrict">Whether XML parsing is strict</param>
         /// <returns>The <see cref="Xspf"/> instance loaded from the stream</returns>
-        public static Xspf Load(string uri, bool isStrict)
+        public static Xspf Load(string uri)
         {
-            return new Xspf(XDocument.Load(uri), isStrict);
+            return new Xspf(XDocument.Load(uri), false);
         }
 
         /// <summary>
@@ -399,15 +371,10 @@ namespace Zhaobang.Xspf
             {
                 try
                 {
-                    return new XspfTrackList(GetElementInPlaylist("trackList"), isStrict);
+                    return new XspfTrackList(GetElementInPlaylist("trackList"), false);
                 }
                 catch (ArgumentNullException)
                 { throw new InvalidDataException(string.Format(ErrorMessages.ElementMissing, "trackList", "playlist")); }
-            }
-            set
-            {
-                GetElementInPlaylist("trackList")?.Remove();
-                Playlist.Add(value.xEle);
             }
         }
     }

@@ -11,56 +11,51 @@ namespace Zhaobang.Xspf
     /// </summary>
     public class XspfTrack
     {
-        private readonly bool isStrict;
-
         internal readonly XElement xEle;
 
         private XElement GetElement(string name)
         {
-            XElement result = xEle.Element(XName.Get(name, Xspf.NS));
-            if (result != null)
-                return result;
-
-            if (!isStrict)
-            {
-                result = xEle.Element(XName.Get(name, Xspf.NS1));
-                if (result != null)
-                    return result;
-
-                result = xEle.Element(XName.Get(name, string.Empty));
-                if (result != null)
-                    return result;
-            }
-
-            return null;
+            return xEle.Element(XName.Get(name, Xspf.NS));
         }
 
         private void SetElementValue(string name, object value)
         {
             xEle.SetElementValue(XName.Get(name, Xspf.NS), value);
-            xEle.SetElementValue(XName.Get(name, Xspf.NS1), null);
-            xEle.SetElementValue(XName.Get(name, string.Empty), null);
         }
 
         /// <summary>
         /// Creates an empty instance of <see cref="XspfTrack"/>
         /// </summary>
-        /// <param name="isStrict">Whether parsing is strict</param>
-        public XspfTrack(bool isStrict)
+        public XspfTrack()
         {
-            this.isStrict = isStrict;
-            xEle = new XElement("track");
+            xEle = new XElement(XName.Get("track", Xspf.NS));
         }
 
         /// <summary>
         /// Creates an instance of <see cref="XspfTrack"/> with its XML element
         /// </summary>
         /// <param name="xEle">The XML element of the track in the playlist</param>
-        /// <param name="isStrict">Whether parsing is strict</param>
-        public XspfTrack(XElement xEle, bool isStrict)
+        public XspfTrack(XElement xEle) : this(xEle, true)
         {
-            this.isStrict = isStrict;
-            this.xEle = xEle;
+        }
+
+        /// <summary>
+        /// Creates an instance of <see cref="XspfTrack"/> with its XML element
+        /// </summary>
+        /// <param name="xEle">The XML element of the track in the playlist</param>
+        /// <param name="copy">Whether to copy the XML element</param>
+        internal XspfTrack(XElement xEle, bool copy)
+        {
+            if (xEle == null)
+                throw new ArgumentNullException(nameof(xEle));
+            if (xEle.Name != XName.Get("track", Xspf.NS))
+                throw new InvalidDataException(
+                    string.Format(ErrorMessages.WrongElementName, XName.Get("track", Xspf.NS), this.xEle.Name));
+
+            if (copy)
+                this.xEle = new XElement(xEle);
+            else
+                this.xEle = xEle;
         }
 
         /// <summary>
@@ -148,6 +143,54 @@ namespace Zhaobang.Xspf
             {
                 SetElementValue("image", value);
             }
+        }
+
+        public static bool operator ==(XspfTrack a, XspfTrack b)
+        {
+            if ((object)a == null)
+            {
+                if ((object)b == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((object)b == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return a.xEle == b.xEle;
+                }
+            }
+        }
+
+        public static bool operator !=(XspfTrack a, XspfTrack b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is XspfTrack track)
+            {
+                return xEle == track.xEle;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return xEle.GetHashCode();
         }
     }
 }

@@ -13,58 +13,37 @@ namespace Zhaobang.Xspf
     /// </summary>
     public class XspfTrackList : IList<XspfTrack>
     {
-        private readonly bool isStrict;
-
         internal readonly XElement xEle;
 
         private IEnumerable<XElement> Elements()
         {
-            if (isStrict)
-            {
-                return xEle.Elements(XName.Get("track", Xspf.NS));
-            }
-            else
-            {
-                return xEle.Elements().Where(e =>
-                    e.Name.LocalName == "track"
-                    && (e.Name.NamespaceName == Xspf.NS
-                        || e.Name.NamespaceName == Xspf.NS1
-                        || e.Name.NamespaceName == string.Empty)
-                    );
-            }
-        }
-
-        /// <summary>
-        /// Creates an empty instance of <see cref="XspfTrackList"/>
-        /// </summary>
-        /// <param name="isStrict">Whether XML parsing is strict</param>
-        public XspfTrackList(bool isStrict)
-        {
-            this.isStrict = isStrict;
-            xEle = new XElement("trackList");
+            return xEle.Elements(XName.Get("track", Xspf.NS));
         }
 
         /// <summary>
         /// Creates a new instance of <see cref="XspfTrackList"/> with its XML element.
         /// </summary>
         /// <param name="xEle">The XML element of the track list</param>
-        /// <param name="isStrict">Whether XML parsing is strict</param>
+        /// <param name="copy">Whether to copy the XML element</param>
         /// <exception cref="ArgumentNullException">
         /// The XML element is null.
         /// </exception>
         /// <exception cref="InvalidDataException">
         /// The XML element is not named "trackList".
         /// </exception>
-        public XspfTrackList(XElement xEle, bool isStrict)
+        internal XspfTrackList(XElement xEle, bool copy)
         {
-            this.isStrict = isStrict;
-            this.xEle = xEle ?? throw new ArgumentNullException(nameof(XspfTrackList.xEle));
+            if (copy)
+                this.xEle = new XElement(xEle ?? throw new ArgumentNullException(nameof(XspfTrackList.xEle)));
+            else
+                this.xEle = xEle ?? throw new ArgumentNullException(nameof(XspfTrackList.xEle));
+
             if (this.xEle.Name.LocalName != "trackList")
                 throw new InvalidDataException(string.Format(ErrorMessages.WrongElementName, "trackList", this.xEle.Name.LocalName));
-            if (this.isStrict)
-                if (this.xEle.Name.NamespaceName != Xspf.NS)
-                    throw new InvalidDataException(
-                        string.Format(ErrorMessages.WrongElementName, XName.Get("trackList", Xspf.NS), this.xEle.Name));
+            if (this.xEle.Name.NamespaceName != Xspf.NS)
+                throw new InvalidDataException(
+                    string.Format(ErrorMessages.WrongElementName, XName.Get("trackList", Xspf.NS), this.xEle.Name));
+
         }
 
         /// <summary>
@@ -103,7 +82,7 @@ namespace Zhaobang.Xspf
             {
                 try
                 {
-                    return new XspfTrack(Elements().ElementAt(index), isStrict);
+                    return new XspfTrack(Elements().ElementAt(index), false);
                 }
                 catch (ArgumentOutOfRangeException)
                 {
@@ -261,7 +240,7 @@ namespace Zhaobang.Xspf
             {
                 foreach (XElement ele in Elements())
                 {
-                    array[arrayIndex] = new XspfTrack(ele, isStrict);
+                    array[arrayIndex] = new XspfTrack(ele);
                     arrayIndex++;
                 }
             }
@@ -296,7 +275,7 @@ namespace Zhaobang.Xspf
         /// <returns>An enumerator of the list</returns>
         public IEnumerator<XspfTrack> GetEnumerator()
         {
-            return Elements().Select(x => new XspfTrack(x, isStrict)).GetEnumerator();
+            return Elements().Select(x => new XspfTrack(x, false)).GetEnumerator();
         }
 
         /// <summary>
@@ -306,6 +285,54 @@ namespace Zhaobang.Xspf
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public static bool operator ==(XspfTrackList a, XspfTrackList b)
+        {
+            if ((object)a == null)
+            {
+                if ((object)b == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if ((object)b == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return a.xEle == b.xEle;
+                }
+            }
+        }
+
+        public static bool operator !=(XspfTrackList a, XspfTrackList b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is XspfTrackList trackList)
+            {
+                return xEle == trackList.xEle;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return xEle.GetHashCode();
         }
     }
 }
