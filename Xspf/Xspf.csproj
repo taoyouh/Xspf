@@ -14,7 +14,7 @@
     <RepositoryUrl></RepositoryUrl>
     <PackageLicenseUrl>https://github.com/ZhaobangChina/Xspf/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ZhaobangChina/Xspf</PackageProjectUrl>
-    <Version>1.0.0-beta</Version>
+    <Version>1.0.0-beta2</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
